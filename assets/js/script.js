@@ -49,14 +49,17 @@ function showAll(parentElement) {
     https://gist.github.com/thiagodebastos/08ea551b97892d585f17 */
 function runGame (callback) {
     const xmlReq = new XMLHttpRequest();
+    let progressContainer = document.getElementById("prog-container");
     xmlReq.overrideMimeType("application/json");
     xmlReq.open("GET", "https://raw.githubusercontent.com/matthewreagan/WebstersEnglishDictionary/master/dictionary.json", true);
     xmlReq.onreadystatechange = function () {
         if (xmlReq.readyState == 4 && xmlReq.status == "200") {
             callback(xmlReq.responseText);
+            progressContainer.classList.add("invisible");
         }
     }
     xmlReq.send(null);
+
 }
 
 /* Function keyAppears() checks if a given key appears in a given word 
