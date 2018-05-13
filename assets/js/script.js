@@ -8,11 +8,11 @@ class Dictionary {
     }
     newWord () {
         let words = Object.keys(this.dictionary);
-        return words[ words.length * Math.random() << 0];
+        return words[ words.length * Math.random() << 0].toUpperCase();
     }
 
     getDefinition(word) {
-        return this.dictionary[word];
+        return this.dictionary[(word.toLowerCase())];
     }
 }
 
@@ -41,7 +41,8 @@ function showAll(parentElement) {
     once the dictionary data has been loaded from the remote server; that callback will
     actually execute the game logic.
     Using XMLHttpRequest to download and parse the dictionary from repository
-    https://github.com/adambom/dictionary
+    https://github.com/matthewreagan/WebstersEnglishDictionary
+    (JSON file based on Websters Unabridged English Dictionary on Project Gutenberg)
     Used information from 
     https://www.w3schools.com/js/js_json_parse.asp
     https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
@@ -49,7 +50,7 @@ function showAll(parentElement) {
 function runGame (callback) {
     const xmlReq = new XMLHttpRequest();
     xmlReq.overrideMimeType("application/json");
-    xmlReq.open("GET", "https://raw.githubusercontent.com/adambom/dictionary/master/dictionary.json", true);
+    xmlReq.open("GET", "https://raw.githubusercontent.com/matthewreagan/WebstersEnglishDictionary/master/dictionary.json", true);
     xmlReq.onreadystatechange = function () {
         if (xmlReq.readyState == 4 && xmlReq.status == "200") {
             callback(xmlReq.responseText);
@@ -58,12 +59,33 @@ function runGame (callback) {
     xmlReq.send(null);
 }
 
-/* Function keyPress() to be run every time onkeyup happens. Checks key against word, reveals 
-   letter if found, counts strike if */
-function keyPress (event, currentWord) {
-    let key = event.key.toUpperCase();
-    console.log(key);
-    if(currentWord.includes(key)) {console.log("includes")}
+/* Function keyAppears() checks if a given key appears in a given word 
+   and returns an object that containswhether or not the letter appears
+   and an array of indices at which the letter appears*/
+function keyAppears (key, currentWord) {
+    key = key.toUpperCase();
+    let appearsOrNot = currentWord.includes(key);
+    let appearsAt = [];
+    if (appearsOrNot) {
+        for (let i = 0; i < currentWord.length; i++) {
+            // set appearsIndex to indexOf key at substring starting with index i
+            let appearsIndex = currentWord.indexOf(key, i);
+            // if appearsIndex >= 0 (meaning it does appear beyond this point)
+            if (appearsIndex >= 0) {
+                appearsAt.push(appearsIndex);
+                i = appearsIndex;
+            }
+        }
+    }
+    return {appears: appearsOrNot, indices: appearsAt};
+}
+
+/* Function revealLetters is a helper function that reveals the letters in the 
+
+/* Function writeDefinition makes the innerHTML of p#definition contain the definition
+   from the current dictionary */
+function writeDefinition (definition) {
+    document.getElementById("definition").innerHTML = definition;
 }
 
 window.onload = function () {
@@ -80,20 +102,26 @@ window.onload = function () {
         const gameDict = new Dictionary(dictionaryFile);
         /* word will be the variable in which we store the word string to be guessed */
         let word;
+        let usedKeys = [];
+        let strikes = 0;
         
+        // Set the word to be guessed to a new word from the game dictionary
         word = gameDict.newWord();
+        // Write out the blanks (the lis that contain the letters made invisible)
         createBlanks(word, document.getElementById("word-to-be-guessed"));
-
+        // Write out the definition in p#definition
+        writeDefinition(gameDict.getDefinition(word));
         
         // Show/Hide helper; for debugging, delete after publish
         document.getElementById("showButton").addEventListener("click", function () {
             showAll(document.getElementById("word-to-be-guessed"));
         });
 
-        // Create key listener that checks key against 
+        /* Create key listener that uses keyAppears to determine key appearance. 
+           If it appears, add the key to usedKeys and then reveal all instances
+           of the key. If not, increment strikes*/
         document.addEventListener("keyup", function(event) {
-            console.log(word);
-            keyPress(event, word);
+            console.log(keyAppears(event.key, word));
         })
     });
 
