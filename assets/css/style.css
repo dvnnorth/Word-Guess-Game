@@ -1,0 +1,12 @@
+body {
+    background-color: rgb(35, 89, 57);
+}
+
+.background-white {
+    background-color: rgb(255, 255, 255);
+}
+
+.main-border {
+    border: 10px solid rgb(124,65,34);
+    border-radius: 10px;
+}
