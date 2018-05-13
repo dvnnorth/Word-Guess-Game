@@ -24,7 +24,16 @@ class Dictionary {
     it is latter guessed correctly and revealed by removing that class */
 function createBlanks (word, containerULElement) {
     for (let i = 0; i < word.length; i++) {
-        containerULElement.innerHTML += "<li class=\"list-inline-item letter\"><span class=\"invisible\" id=\"letter" + i + "\">" + word[i] + "</span></li>";
+        containerULElement.innerHTML += "<li class=\"list-inline-item letter\"><span class=\"invisible\" id=\"letter" + i + "\">" + (word[i] != ' ' ? word[i] : "&nbsp;") + "</span></li>";
+    }
+}
+
+// Quick show all helper function to ensure createBlanks is working
+function showAll(parentElement) {
+    console.log("running showAll");
+    for (let i = 1; i <= parentElement.childElementCount; i++) {
+        console.log("id: letter" + (i -  1));
+        document.getElementById("letter" + (i - 1)).classList.remove("invisible");
     }
 }
 
@@ -65,7 +74,12 @@ window.onload = function () {
         let word;
         
         word = gameDict.newWord();
-        createBlanks(word, document.getElementById(""));
+        createBlanks(word, document.getElementById("word-to-be-guessed"));
+        
+        // Show/Hide helper; for debugging, delete after publish
+        document.getElementById("showButton").addEventListener("click", function () {
+            showAll(document.getElementById("word-to-be-guessed"));
+        });
     });
 
 };
