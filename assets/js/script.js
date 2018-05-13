@@ -58,6 +58,14 @@ function runGame (callback) {
     xmlReq.send(null);
 }
 
+/* Function keyPress() to be run every time onkeyup happens. Checks key against word, reveals 
+   letter if found, counts strike if */
+function keyPress (event, currentWord) {
+    let key = event.key.toUpperCase();
+    console.log(key);
+    if(currentWord.includes(key)) {console.log("includes")}
+}
+
 window.onload = function () {
 
     // Running game, callback function is anonymous function with game logic
@@ -75,11 +83,18 @@ window.onload = function () {
         
         word = gameDict.newWord();
         createBlanks(word, document.getElementById("word-to-be-guessed"));
+
         
         // Show/Hide helper; for debugging, delete after publish
         document.getElementById("showButton").addEventListener("click", function () {
             showAll(document.getElementById("word-to-be-guessed"));
         });
+
+        // Create key listener that checks key against 
+        document.addEventListener("keyup", function(event) {
+            console.log(word);
+            keyPress(event, word);
+        })
     });
 
 };
