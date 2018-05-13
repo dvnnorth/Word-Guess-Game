@@ -81,6 +81,12 @@ function keyAppears (key, currentWord) {
 }
 
 /* Function revealLetters is a helper function that reveals the letters in the 
+   ul#word-to-be-guessed at given indices */
+function revealLetters (appearances) {
+    for (let i = 0; i < appearances.length; i++) {
+        document.getElementById("letter" + appearances[i]).classList.remove("invisible");
+    }
+}
 
 /* Function writeDefinition makes the innerHTML of p#definition contain the definition
    from the current dictionary */
@@ -119,9 +125,17 @@ window.onload = function () {
 
         /* Create key listener that uses keyAppears to determine key appearance. 
            If it appears, add the key to usedKeys and then reveal all instances
-           of the key. If not, increment strikes*/
+           of the key. If not, increment strikes
+           
+           appearance is an object returned by keyAppears that contains whether or not the 
+           key appears as a boolean (appearance.appears) and an array of indices at which
+           the given key appears (appearance.indices)
+           */
         document.addEventListener("keyup", function(event) {
-            console.log(keyAppears(event.key, word));
+            let appearance = keyAppears(event.key, word);
+            if (appearance.appears) {
+                revealLetters(appearance.indices);
+            }
         })
     });
 
