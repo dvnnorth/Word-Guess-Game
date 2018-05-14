@@ -45,6 +45,19 @@
 
         </div>
 
+        <!-- Display win/loss text -->
+        <!-- Expose the word-->
+        <div class="row">
+
+            <div class="col-lg-8 mx-auto" id="win-loss-display">
+
+                <h2 class="text-success text-center d-none" id="win-text">You won!</h2>
+                <h2 class="text-danger text-center d-none" id="loss-text">You lost.</h2>
+ 
+            </div>
+
+        </div>
+
         <!-- Definition and used letters-->
         <div class="row">
 
@@ -65,7 +78,7 @@
 
             <div class="col-lg-4 mr-auto my-3" id="definition-box">
                 <h3 class="text-center">Definition:</h3>
-                <p id="definition" class="invisible">
+                <p id="definition">
 
                 </p>
             </div>
@@ -83,9 +96,6 @@
         </div>
 
     </div>
-
-    <button id="showHideButton">Show/Hide Word</button>
-    <button id="showBottom">Show Bottom Display</button>
 
     <script src="assets/js/script.js"></script>
 </body>

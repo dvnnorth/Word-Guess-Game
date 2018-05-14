@@ -31,6 +31,17 @@ function createBlanks (word, containerULElement) {
 function clearDisplay () {
     document.getElementById("word-to-be-guessed").innerHTML = "";
     document.getElementById("strikes").innerHTML = "";
+    document.getElementById("definition").innerHTML = "";
+    document.getElementById("used-letters").innerHTML = "";
+    if (!document.getElementById("win-text").classList.contains("d-none")) {
+        document.getElementById("win-text").classList.add("d-none");
+    }
+    if (!document.getElementById("loss-text").classList.contains("d-none")) {
+        document.getElementById("loss-text").classList.add("d-none");
+    }
+    if (!document.getElementById("bottom-display").classList.contains("d-none")) {
+        document.getElementById("bottom-display").classList.add("d-none");
+    }
 }
 
 /*  Create a function that runs the game. runGame expects a callback that will be executed
@@ -89,16 +100,9 @@ function revealLetters (appearances) {
 }
 
 // Quick show all helper function to ensure createBlanks is working
-function showHideLetters(parentElement) {
-    if (document.getElementById("letter0").classList.contains("invisible")) {
-        for (let i = 1; i <= parentElement.childElementCount; i++) {
-            document.getElementById("letter" + (i - 1)).classList.remove("invisible");
-        }
-    }
-    else {
-        for (let i = 1; i <= parentElement.childElementCount; i++) {
-            document.getElementById("letter" + (i - 1)).classList.add("invisible");
-        }
+function showAllLetters() {
+    for (let i = 1; i <= document.getElementById("word-to-be-guessed").childElementCount; i++) {
+        document.getElementById("letter" + (i - 1)).classList.remove("invisible");
     }
 }
 
@@ -119,6 +123,31 @@ function writeDefinition (definition) {
     document.getElementById("definition").innerHTML = definition;
 }
 
+function displayUsedLetter (usedLetter) {
+    document.getElementById("used-letters").innerHTML = document.getElementById("used-letters").innerHTML + "&nbsp;" + usedLetter;
+}
+
+function winDisplay() {
+    document.getElementById("win-text").classList.remove("d-none");
+    revealBottomDisplay();
+}
+
+function loseDisplay() {
+    document.getElementById("loss-text").classList.remove("d-none");
+    revealBottomDisplay();
+}
+
+function checkAllLetterDisplayed () {
+    let allDisplayed = true;
+    for (let i = 1; i <= document.getElementById("word-to-be-guessed").childElementCount; i++) {
+        if (document.getElementById("letter" + (i - 1)).classList.contains("invisible")) {
+            allDisplayed = false;
+            break;
+        }
+    }
+    return allDisplayed;
+}
+
 function gameLogic(response) {
 
     // Declare game variables
@@ -130,8 +159,9 @@ function gameLogic(response) {
     const gameDict = new Dictionary(dictionaryFile);
     /* word will be the variable in which we store the word string to be guessed */
     let word = "";
-    let usedKeys = [];
+    let usedLetters = [];
     let strikes = 0;
+    let end = false;
     
     // Set the word to be guessed to a new word from the game dictionary
     word = gameDict.newWord();
@@ -154,7 +184,7 @@ function gameLogic(response) {
     /* Putting all event listeners here in the logic so that they're reset when the game resets and they're scoped properly */
 
     /* Create key listener that uses keyAppears to determine key appearance. 
-       If it appears, add the key to usedKeys and then reveal all instances
+       If it appears, add the key to usedLetters and then reveal all instances
        of the key. If not, increment strikes
        
        appearance is an object returned by keyAppears that contains whether or not the 
@@ -162,18 +192,33 @@ function gameLogic(response) {
        the given key appears (appearance.indices)
        */
     document.body.addEventListener("keyup", function () {
-        let key = event.key.toUpperCase(), appearance;
-        const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", 
-                          "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-        if (alphabet.includes(key)) {
-            appearance = keyAppears(key, word);
-        }
-        if (typeof appearance !== 'undefined' && appearance.appears) {
-            revealLetters(appearance.indices);
-        }
-        else if (typeof appearance !== 'undefined' && !appearance.appears) {
-            strikes++;
-            document.getElementById("strikes").innerHTML = strikes;
+        if(!end) {
+            let key = event.key.toUpperCase(), appearance;
+            const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", 
+                            "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+            if (alphabet.includes(key) && !usedLetters.includes(key)) {
+                appearance = keyAppears(key, word);
+                usedLetters.push(key);
+                displayUsedLetter(key);
+            }
+            if (typeof appearance !== 'undefined' && appearance.appears) {
+                revealLetters(appearance.indices);
+            }
+            else if (typeof appearance !== 'undefined' && !appearance.appears) {
+                strikes++;
+                document.getElementById("strikes").innerHTML = strikes;
+            }
+            if (strikes > 5) {
+                writeDefinition(gameDict.getDefinition(word));
+                showAllLetters();
+                loseDisplay();
+                end = true;
+            }
+            if (strikes <= 5 && checkAllLetterDisplayed()) {
+                writeDefinition(gameDict.getDefinition(word));
+                winDisplay();
+                end = true;
+            }
         }
     });
 
@@ -181,21 +226,6 @@ function gameLogic(response) {
         clearDisplay();
         document.getElementById("prog-container").classList.remove("d-none");
         loadGame(gameLogic);
-    });
-    
-    // Show helper; for debugging, delete for publishing
-    document.getElementById("showHideButton").addEventListener("click", function () {
-        showHideLetters(document.getElementById("word-to-be-guessed"));
-    });
-    
-    // Show bottom display helper; for debuggin, delete for publishing
-    document.getElementById("showBottom").addEventListener("click", function () {
-        if (document.getElementById("bottom-display").classList.contains("d-none")) {
-            revealBottomDisplay();
-        }
-        else {
-            hideBottomDisplay();
-        }
     });
 
 }
