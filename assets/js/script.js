@@ -45,12 +45,11 @@ function clearDisplay () {
     https://gist.github.com/thiagodebastos/08ea551b97892d585f17 */
 function loadGame (callback) {
     const xmlReq = new XMLHttpRequest();
-    let progressContainer = document.getElementById("prog-container");
     xmlReq.overrideMimeType("application/json");
     xmlReq.open("GET", "https://raw.githubusercontent.com/matthewreagan/WebstersEnglishDictionary/master/dictionary.json", true);
     xmlReq.onreadystatechange = function () {
         if (xmlReq.readyState == 4 && xmlReq.status == "200") {
-            progressContainer.classList.add("d-none");
+            document.getElementById("prog-container").classList.add("d-none");
             callback(xmlReq.responseText);
         }
     }
@@ -62,7 +61,6 @@ function loadGame (callback) {
    and returns an object that containswhether or not the letter appears
    and an array of indices at which the letter appears*/
 function keyAppears (key, currentWord) {
-    key = key.toUpperCase();
     let appearsOrNot = currentWord.includes(key);
     let appearsAt = [];
     if (appearsOrNot) {
@@ -131,7 +129,7 @@ function gameLogic(response) {
     /* gameDict is the Dictionary object from which we will pull words and definitions */
     const gameDict = new Dictionary(dictionaryFile);
     /* word will be the variable in which we store the word string to be guessed */
-    let word;
+    let word = "";
     let usedKeys = [];
     let strikes = 0;
     
@@ -145,12 +143,15 @@ function gameLogic(response) {
     // do this on win or loss writeDefinition(gameDict.getDefinition(word));
 
     /* Clone body to get rid of previous keyup event listeners */
-    /* Got this little hack that saved my game from 
-    https://stackoverflow.com/questions/19469881/remove-all-event-listeners-of-specific-type?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa */
+    /* Got this little hack that saved my game from complete failure learned from 
+       https://stackoverflow.com/questions/19469881/remove-all-event-listeners-of-specific-type?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa 
+       cloning the body and replacing it with its clone clears all event handlers associated with the body and all child elements. I couldn't clear the keyup event handler
+       for some reason and so each game reset was just making a new key handler and messing everything up
+       document.removeEventListener("keyup", onKeyUp) was not working */
     let htmlBody = document.getElementById("pageBody"), bodyClone = htmlBody.cloneNode(true);
     htmlBody.parentElement.replaceChild(bodyClone, htmlBody);
 
-    /* Putting all event listeners here in the logic so that they're reset when the game resets */
+    /* Putting all event listeners here in the logic so that they're reset when the game resets and they're scoped properly */
 
     /* Create key listener that uses keyAppears to determine key appearance. 
        If it appears, add the key to usedKeys and then reveal all instances
@@ -160,12 +161,17 @@ function gameLogic(response) {
        key appears as a boolean (appearance.appears) and an array of indices at which
        the given key appears (appearance.indices)
        */
-    document.body.addEventListener("keyup", function(event) {
-        let appearance = keyAppears(event.key, word);
-        if (appearance.appears) {
+    document.body.addEventListener("keyup", function () {
+        let key = event.key.toUpperCase(), appearance;
+        const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", 
+                          "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+        if (alphabet.includes(key)) {
+            appearance = keyAppears(key, word);
+        }
+        if (typeof appearance !== 'undefined' && appearance.appears) {
             revealLetters(appearance.indices);
         }
-        else {
+        else if (typeof appearance !== 'undefined' && !appearance.appears) {
             strikes++;
             document.getElementById("strikes").innerHTML = strikes;
         }
@@ -173,6 +179,7 @@ function gameLogic(response) {
 
     document.getElementById("play-again").addEventListener("click", function () {
         clearDisplay();
+        document.getElementById("prog-container").classList.remove("d-none");
         loadGame(gameLogic);
     });
     
