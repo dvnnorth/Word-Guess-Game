@@ -28,15 +28,6 @@ function createBlanks (word, containerULElement) {
     }
 }
 
-// Quick show all helper function to ensure createBlanks is working
-function showAll(parentElement) {
-    console.log("running showAll");
-    for (let i = 1; i <= parentElement.childElementCount; i++) {
-        console.log("id: letter" + (i -  1));
-        document.getElementById("letter" + (i - 1)).classList.remove("invisible");
-    }
-}
-
 /*  Create a function that runs the game. runGame expects a callback that will be executed
     once the dictionary data has been loaded from the remote server; that callback will
     actually execute the game logic.
@@ -91,6 +82,31 @@ function revealLetters (appearances) {
     }
 }
 
+// Quick show all helper function to ensure createBlanks is working
+function showHideLetters(parentElement) {
+    if (document.getElementById("letter0").classList.contains("invisible")) {
+        for (let i = 1; i <= parentElement.childElementCount; i++) {
+            document.getElementById("letter" + (i - 1)).classList.remove("invisible");
+        }
+    }
+    else {
+        for (let i = 1; i <= parentElement.childElementCount; i++) {
+            document.getElementById("letter" + (i - 1)).classList.add("invisible");
+        }
+    }
+}
+
+/* Function revealBottomDisplay that reveals the bottom row which will contain
+   different elements for user input (difficulty, restart game) */
+function revealBottomDisplay () {
+    document.getElementById("bottom-display").classList.remove("d-none");
+}
+
+/* Function hideBottomDisplay that just hides the bottom display area */
+function hideBottomDisplay () {
+    document.getElementById("bottom-display").classList.add("d-none");
+}
+
 /* Function writeDefinition makes the innerHTML of p#definition contain the definition
    from the current dictionary */
 function writeDefinition (definition) {
@@ -116,14 +132,26 @@ window.onload = function () {
         
         // Set the word to be guessed to a new word from the game dictionary
         word = gameDict.newWord();
+        
         // Write out the blanks (the lis that contain the letters made invisible)
         createBlanks(word, document.getElementById("word-to-be-guessed"));
-        // Write out the definition in p#definition
-        writeDefinition(gameDict.getDefinition(word));
         
-        // Show/Hide helper; for debugging, delete after publish
-        document.getElementById("showButton").addEventListener("click", function () {
-            showAll(document.getElementById("word-to-be-guessed"));
+        // Write out the definition in p#definition
+        // do this on win or loss writeDefinition(gameDict.getDefinition(word));
+        
+        // Show helper; for debugging, delete for publishing
+        document.getElementById("showHideButton").addEventListener("click", function () {
+            showHideLetters(document.getElementById("word-to-be-guessed"));
+        });
+
+        // Show bottom display helper; for debuggin, delete for publishing
+        document.getElementById("showBottom").addEventListener("click", function () {
+            if (document.getElementById("bottom-display").classList.contains("d-none")) {
+                revealBottomDisplay();
+            }
+            else {
+                hideBottomDisplay();
+            }
         });
 
         /* Create key listener that uses keyAppears to determine key appearance. 

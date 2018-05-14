@@ -48,27 +48,27 @@
         <!-- Definition and used letters-->
         <div class="row">
 
-            <div class="col-lg-4 ml-auto" id="used-letters-box">
-                <h3>Used Letters:</h3>
+            <div class="col-lg-4 ml-auto my-3" id="used-letters-box">
+                <h3 class="text-center">Used Letters:</h3>
                 <ul class="list-inline text-center" id="used-letters">
 
                 </ul>
             </div>
 
-            <div class="col-lg-4 mr-auto" id="definition-box">
-                <h3>Definition:</h3>
-                <p id="definition">
+            <div class="col-lg-4 mr-auto my-3" id="definition-box">
+                <h3 class="text-center">Definition:</h3>
+                <p id="definition" class="invisible">
 
                 </p>
             </div>
 
         </div>
 
-        <div class="row">
+        <div class="row d-none" id="bottom-display">
 
             <div class="col-lg-8 mr-auto ml-auto" id="play-again">
                     
-                <div class="card ml-auto mr-auto" style="width: 18rem;">
+                <div class="card ml-auto mr-auto my-3" style="width: 18rem;">
                     
                     <div class="card-body">
                         
@@ -88,7 +88,8 @@
 
     </div>
 
-    <button id="showButton">Show</button>
+    <button id="showHideButton">Show/Hide Word</button>
+    <button id="showBottom">Show Bottom Display</button>
 
     <script src="assets/js/script.js"></script>
 </body>
