@@ -11,13 +11,13 @@
     <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
     <title>Hello, world!</title>
 </head>
-<body>
+<body id="pageBody">
     
     <div class="container main-border background-white">
         
         <div class="row">
 
-            <div class="col-lg-8 mr-auto ml-auto">
+            <div class="col-lg-8 mx-auto">
 
                 <header>
                     <h1 class="display-4 text-center">Guess That Word!</h1>
@@ -30,7 +30,7 @@
         <!-- Expose the word-->
         <div class="row">
 
-            <div class="col-lg-8 mr-auto ml-auto" id="word-display-div">
+            <div class="col-lg-8 mx-auto" id="word-display-div">
 
                 <!-- XMLHttpRequest progress bar-->
                 <div class="progress" id="prog-container">
@@ -48,11 +48,19 @@
         <!-- Definition and used letters-->
         <div class="row">
 
-            <div class="col-lg-4 ml-auto my-3" id="used-letters-box">
-                <h3 class="text-center">Used Letters:</h3>
-                <ul class="list-inline text-center" id="used-letters">
+            <div class="col-lg-4 ml-auto my-3">
+                <div id="used-letters-box">
 
-                </ul>
+                    <h3 class="text-center">Used Letters:</h3>
+                    <ul class="list-inline text-center" id="used-letters">
+
+                    </ul>
+                </div>
+
+                <div id="strikes-box">
+                    <h3 class="text-center">Strikes:&nbsp;<span id="strikes"></span></h3>
+                </div>
+
             </div>
 
             <div class="col-lg-4 mr-auto my-3" id="definition-box">
@@ -66,22 +74,10 @@
 
         <div class="row d-none" id="bottom-display">
 
-            <div class="col-lg-8 mr-auto ml-auto" id="play-again">
+            <div class="mx-auto w-auto">
                     
-                <div class="card ml-auto mr-auto my-3" style="width: 18rem;">
-                    
-                    <div class="card-body">
-                        
-                        <h5 class="card-title text-center">Play Again?</h5>
-                        
-                        <div class="ml-auto mr-auto" style="width: 105px">
-                            <button class="btn btn-success">Yes</button>
-                            <button class="btn btn-danger">No</button>
-                        </div>
+                <button class="btn btn-success my-3 mx-4" id="play-again">Play Again?</button>
 
-                    </div>
-
-                </div>
             </div>
 
         </div>
