@@ -8,8 +8,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="assets/css/reset.css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Text:400,700|Libre+Baskerville|Merriweather" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
-    <title>Hello, world!</title>
+    <title>Guess That Word!</title>
 </head>
 <body id="pageBody">
     
@@ -20,7 +21,7 @@
             <div class="col-lg-8 mx-auto">
 
                 <header>
-                    <h1 class="display-4 text-center">Guess That Word!</h1>
+                    <h1 class="text-center my-3">Guess That Word!</h1>
                 </header>
             
             </div>
@@ -34,7 +35,7 @@
 
                 <!-- XMLHttpRequest progress bar-->
                 <div class="progress mx-auto" id="prog-container" style="height: 20px; width: 75%">
-                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" id="prog-bar" role="progressbar" style="width: 100%"></div>
+                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated text-center" id="prog-bar" role="progressbar" style="width: 100%">Loading</div>
                 </div>
 
                 <ul class="list-inline text-center" id="word-to-be-guessed">
@@ -53,6 +54,7 @@
 
                 <h2 class="text-success text-center d-none" id="win-text">You won!</h2>
                 <h2 class="text-danger text-center d-none" id="loss-text">You lost.</h2>
+                <div class="mx-auto text-center" id="play-again"><button class="btn btn-success my-3 mx-4">Play Again?</button></div>
  
             </div>
 
@@ -68,7 +70,7 @@
                     <ul class="list-inline text-center" id="used-letters">
 
                     </ul>
-                </div>
+                </div>  
 
                 <div id="strikes-box">
                     <h3 class="text-center">Strikes:&nbsp;<span id="strikes"></span></h3>
@@ -81,16 +83,6 @@
                 <p id="definition">
 
                 </p>
-            </div>
-
-        </div>
-
-        <div class="row d-none" id="bottom-display">
-
-            <div class="mx-auto w-auto">
-                    
-                <button class="btn btn-success my-3 mx-4" id="play-again">Play Again?</button>
-
             </div>
 
         </div>

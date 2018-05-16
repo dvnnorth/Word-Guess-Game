@@ -24,7 +24,12 @@ class Dictionary {
     it is latter guessed correctly and revealed by removing that class */
 function createBlanks (word, containerULElement) {
     for (let i = 0; i < word.length; i++) {
-        containerULElement.innerHTML += "<li class=\"list-inline-item letter\"><span class=\"invisible\" id=\"letter" + i + "\">" + (word[i] != ' ' ? word[i] : "&nbsp;") + "</span></li>";
+        if (word[i] === '-' || word[i] == ' ') {
+            containerULElement.innerHTML += "<li class=\"list-inline-item letter\"><span class=\"\" id=\"letter" + i + "\">" + (word[i] != ' ' ? word[i] : "&nbsp;") + "</span></li>";
+        }
+        else {
+            containerULElement.innerHTML += "<li class=\"list-inline-item letter\"><span class=\"invisible\" id=\"letter" + i + "\">" + (word[i] != ' ' ? word[i] : "&nbsp;") + "</span></li>";
+        }
     }
 }
 
@@ -33,14 +38,12 @@ function clearDisplay () {
     document.getElementById("strikes").innerHTML = "";
     document.getElementById("definition").innerHTML = "";
     document.getElementById("used-letters").innerHTML = "";
+    showHideRestartButton();
     if (!document.getElementById("win-text").classList.contains("d-none")) {
         document.getElementById("win-text").classList.add("d-none");
     }
     if (!document.getElementById("loss-text").classList.contains("d-none")) {
         document.getElementById("loss-text").classList.add("d-none");
-    }
-    if (!document.getElementById("bottom-display").classList.contains("d-none")) {
-        document.getElementById("bottom-display").classList.add("d-none");
     }
 }
 
@@ -106,10 +109,16 @@ function showAllLetters() {
     }
 }
 
-/* Function revealBottomDisplay that reveals the bottom row which will contain
+/* Function showRestartButton that reveals the bottom row which will contain
    different elements for user input (difficulty, restart game) */
-function revealBottomDisplay () {
-    document.getElementById("bottom-display").classList.remove("d-none");
+function showHideRestartButton () {
+    let restartbuttonClassList = document.getElementById("play-again").classList;
+    if (restartbuttonClassList.contains("d-none")) {
+        restartbuttonClassList.remove("d-none");
+    }
+    else {
+        restartbuttonClassList.add("d-none");
+    }
 }
 
 /* Function hideBottomDisplay that just hides the bottom display area */
@@ -129,12 +138,12 @@ function displayUsedLetter (usedLetter) {
 
 function winDisplay() {
     document.getElementById("win-text").classList.remove("d-none");
-    revealBottomDisplay();
+    showHideRestartButton();
 }
 
 function loseDisplay() {
     document.getElementById("loss-text").classList.remove("d-none");
-    revealBottomDisplay();
+    showHideRestartButton();
 }
 
 function checkAllLetterDisplayed () {
@@ -168,7 +177,7 @@ function gameLogic(response) {
     
     // Write out the blanks (the lis that contain the letters made invisible)
     createBlanks(word, document.getElementById("word-to-be-guessed"));
-    
+
     // Write out the definition in p#definition
     // do this on win or loss writeDefinition(gameDict.getDefinition(word));
 

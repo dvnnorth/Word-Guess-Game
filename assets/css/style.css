@@ -1,5 +1,6 @@
 body {
-    background-color: rgb(35, 89, 57);
+    background-image: url(../img/books-shelves-architecture-wood-442420.png);
+    background-size: cover;
 }
 
 .background-white {
@@ -12,6 +13,28 @@ body {
 }
 
 .main-border {
-    border: 10px solid rgb(124,65,34);
-    border-radius: 10px;
+    /* border image info from W3 schools */
+    border: 10px solid transparent;
+    padding: 15px;
+    -webkit-border-image: url(../img/retina_wood_dark.png) 30 round; /* Safari 3.1-5 */
+    -o-border-image: url(../img/retina_wood_dark.png) 30 round; /* Opera 11-12.1 */
+    border-image: url(../img/retina_wood_dark.png) 30 round;
+}
+
+.container {
+    background: url(../img/seamless_paper_texture.png);
+}
+
+h1 {
+    font-family: 'Crimson Text', 'Times New Roman', Times, serif;
+    font-size: 4rem;
+    font-weight: bold;
+}
+
+h3 {
+    font-family: 'Libre Baskerville', 'Times New Roman', Times, serif;
+}
+
+p, ul, li {
+    font-family: 'Merriweather', 'Times New Roman', Times, serif;
 }
