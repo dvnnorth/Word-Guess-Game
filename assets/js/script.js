@@ -200,7 +200,7 @@ function gameLogic(response) {
        key appears as a boolean (appearance.appears) and an array of indices at which
        the given key appears (appearance.indices)
        */
-    document.body.addEventListener("keyup", function () {
+    document.body.addEventListener("keyup", function (event) {
         if(!end) {
             let key = event.key.toUpperCase(), appearance;
             const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", 
